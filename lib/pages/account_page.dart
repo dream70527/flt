@@ -30,6 +30,12 @@ class AccountPage extends GetView<AccountController> {
           return const Center(child: CircularProgressIndicator());
         }
 
+        // 未登录状态
+        if (!controller.isLoggedIn) {
+          return _buildNotLoggedInView(context);
+        }
+
+        // 已登录状态
         return SingleChildScrollView(
           padding: EdgeInsets.all(16.w),
           child: Column(
@@ -85,6 +91,76 @@ class AccountPage extends GetView<AccountController> {
           ),
         );
       }),
+    );
+  }
+
+  /// 未登录状态的视图
+  Widget _buildNotLoggedInView(BuildContext context) {
+    return Center(
+      child: Padding(
+        padding: EdgeInsets.all(32.w),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(
+              Icons.account_circle_outlined,
+              size: 120.w,
+              color: Colors.grey[400],
+            ),
+            SizedBox(height: 24.h),
+            Text(
+              '您还未登录',
+              style: TextStyle(
+                fontSize: 24.sp,
+                fontWeight: FontWeight.bold,
+                color: Colors.grey[600],
+              ),
+            ),
+            SizedBox(height: 8.h),
+            Text(
+              '请先登录以查看和管理您的账户信息',
+              style: TextStyle(
+                fontSize: 16.sp,
+                color: Colors.grey[500],
+              ),
+              textAlign: TextAlign.center,
+            ),
+            SizedBox(height: 32.h),
+            SizedBox(
+              width: double.infinity,
+              height: 50.h,
+              child: ElevatedButton(
+                onPressed: () => Get.toNamed('/login'),
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.blue,
+                  foregroundColor: Colors.white,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(25.r),
+                  ),
+                ),
+                child: Text(
+                  '立即登录',
+                  style: TextStyle(fontSize: 18.sp),
+                ),
+              ),
+            ),
+            SizedBox(height: 16.h),
+            TextButton(
+              onPressed: () {
+                // 可以添加游客模式功能
+                Get.snackbar('提示', '游客模式功能开发中');
+              },
+              child: Text(
+                '以游客身份继续',
+                style: TextStyle(
+                  fontSize: 16.sp,
+                  color: Colors.grey[600],
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
     );
   }
 

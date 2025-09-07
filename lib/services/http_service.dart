@@ -1,8 +1,6 @@
-import 'dart:convert';
-import 'package:crypto/crypto.dart';
-
 import 'package:dio/dio.dart';
 import 'package:get/get.dart' as getx;
+import '../interceptors/interceptors.dart';
 
 class ApiResponse<T> {
   final bool success;
@@ -66,80 +64,14 @@ class HttpService extends getx.GetxService {
       responseHeader: false,
     ));
 
-    _dio.interceptors.add(InterceptorsWrapper(
-      onRequest: (options, handler) {
-        if (options.extra['isShowLoading'] ?? false) {
-          // ToastUtils.showLoading();
-        }
-
-        Map<String, dynamic> headers = options.headers;
-
-        // String? token = StringKV.token.get();
-        // if (token == null) {
-        //   UserController.to.loginStatus.value = false;
-        // }
-
-        // 需求替换掉第一个/ 要不然加密失败
-        String apiPath = options.path.replaceFirst("/", "");
-        final secretToken = 'api-78-token';
-        final timestamp = generateHexTimestamp();
-        // X-Verification-Token : 1f9d3c4f6bebe37ea13ffdf7215879ba38808a33f56a67b4535fac215d250765:api-78-token:1973f745170
-        String xToken = generateFinalToken(
-          uri: apiPath,
-          secretToken: secretToken,
-          timestamp: timestamp,
-        );
-        // print("---------------");
-        // print(xToken);
-        headers['Accept'] = 'application/json';
-        headers['Content-Type'] = 'application/json';
-        headers['Cache-Control'] = 'no-cache';
-        // headers['token'] = token;
-        headers['Accept-Language'] = 'zh';
-        headers['X-Requested-With'] = 'XMLHttpRequest';
-        headers['X-Verification-Token'] = xToken;
-
-        headers.removeWhere((key, value) => value == null);
-        options.headers = headers;
-        handler.next(options);
-      },
-      onResponse: (response, handler) {
-        // 统一在这里处理响应数据
-        // dynamic responseData = response.data;
-        //
-        // // 处理后端返回的包装结构 {data: [...], message: 'ok'}
-        // if (responseData is Map<String, dynamic> && responseData.containsKey('data')) {
-        //   response.data = responseData['data'];
-        // }
-        
-        handler.next(response);
-      },
-      onError: (error, handler) {
-        handler.next(error);
-      },
-    ));
+    _dio.interceptors.add(RequestInterceptor());
+    _dio.interceptors.add(ResponseInterceptor());
   }
 
-  String generateHexTimestamp() {
-    final milliseconds = DateTime.now().millisecondsSinceEpoch;
-    return milliseconds.toRadixString(16);
-  }
-  String generateFinalToken({
-    required String uri,
-    required String secretToken,
-    required String timestamp,
-  }) {
-    final originalString = '$secretToken:$uri:$timestamp';
-    // 生成 SHA-256 哈希值
-    final bytes = utf8.encode(originalString);
-    final digest = sha256.convert(bytes).toString();
-    // 拼接最终 Token
-    final finalToken = '$digest:$secretToken:$timestamp';
-    return finalToken;
-  }
 
   Future<ApiResponse<T>> get<T>(
     String path, {
+    T Function(dynamic)? converter,
     Map<String, dynamic>? queryParameters,
     Options? options,
     CancelToken? cancelToken,
@@ -151,35 +83,15 @@ class HttpService extends getx.GetxService {
         options: options,
         cancelToken: cancelToken,
       );
-      return _handleResponse<T>(response);
+      return _handleResponse<T>(response, converter);
     } catch (e) {
       return _handleError<T>(e);
     }
   }
 
-  Future<ApiResponse<List<T>>> getList<T>(
-    String path, {
-    required T Function(Map<String, dynamic>) fromJson,
-    Map<String, dynamic>? queryParameters,
-    Options? options,
-    CancelToken? cancelToken,
-  }) async {
-    try {
-      final response = await _dio.get(
-        path,
-        queryParameters: queryParameters,
-        options: options,
-        cancelToken: cancelToken,
-      );
-      return _handleListResponse<T>(response, fromJson);
-    } catch (e) {
-      return _handleError<List<T>>(e);
-    }
-  }
-
-  ApiResponse<List<T>> _handleListResponse<T>(
-    Response response, 
-    T Function(Map<String, dynamic>) fromJson
+  ApiResponse<T> _handleResponse<T>(
+    Response response,
+    T Function(dynamic)? converter,
   ) {
     if (response.statusCode == 200 || response.statusCode == 201) {
       dynamic responseData = response.data;
@@ -189,14 +101,14 @@ class HttpService extends getx.GetxService {
         responseData = responseData['data'];
       }
       
-      if (responseData is List) {
-        final list = responseData
-            .map((json) => fromJson(json as Map<String, dynamic>))
-            .toList();
-        return ApiResponse.success(list, message: 'Success');
+      T result;
+      if (converter != null) {
+        result = converter(responseData);
       } else {
-        return ApiResponse.error('Expected list data but got ${responseData.runtimeType}');
+        result = responseData as T;
       }
+      
+      return ApiResponse.success(result, message: 'Success');
     } else {
       return ApiResponse.error(
         'Request failed with status: ${response.statusCode}',
@@ -208,6 +120,7 @@ class HttpService extends getx.GetxService {
   Future<ApiResponse<T>> post<T>(
     String path, {
     dynamic data,
+    T Function(dynamic)? converter,
     Map<String, dynamic>? queryParameters,
     Options? options,
     CancelToken? cancelToken,
@@ -220,7 +133,7 @@ class HttpService extends getx.GetxService {
         options: options,
         cancelToken: cancelToken,
       );
-      return _handleResponse<T>(response);
+      return _handleResponse<T>(response, converter);
     } catch (e) {
       return _handleError<T>(e);
     }
@@ -229,6 +142,7 @@ class HttpService extends getx.GetxService {
   Future<ApiResponse<T>> put<T>(
     String path, {
     dynamic data,
+    T Function(dynamic)? converter,
     Map<String, dynamic>? queryParameters,
     Options? options,
     CancelToken? cancelToken,
@@ -241,7 +155,7 @@ class HttpService extends getx.GetxService {
         options: options,
         cancelToken: cancelToken,
       );
-      return _handleResponse<T>(response);
+      return _handleResponse<T>(response, converter);
     } catch (e) {
       return _handleError<T>(e);
     }
@@ -250,6 +164,7 @@ class HttpService extends getx.GetxService {
   Future<ApiResponse<T>> delete<T>(
     String path, {
     dynamic data,
+    T Function(dynamic)? converter,
     Map<String, dynamic>? queryParameters,
     Options? options,
     CancelToken? cancelToken,
@@ -262,42 +177,12 @@ class HttpService extends getx.GetxService {
         options: options,
         cancelToken: cancelToken,
       );
-      return _handleResponse<T>(response);
+      return _handleResponse<T>(response, converter);
     } catch (e) {
       return _handleError<T>(e);
     }
   }
 
-  ApiResponse<T> _handleResponse<T>(Response response) {
-    if (response.statusCode == 200 || response.statusCode == 201) {
-      dynamic responseData = response.data;
-      
-      // 处理后端返回的包装结构 {data: [...], message: 'ok'}
-      if (responseData is Map<String, dynamic> && responseData.containsKey('data')) {
-        responseData = responseData['data'];
-      }
-      
-      // 处理模型序列化
-      if (T.toString().startsWith('List<') && T.toString().contains('Model')) {
-        // 处理 List<SomeModel> 类型
-        if (responseData is List) {
-          // 这里需要根据具体的模型类型进行转换
-          // 暂时返回原始数据，让上层处理
-          return ApiResponse.success(responseData as T, message: 'Success');
-        }
-      }
-      
-      return ApiResponse.success(
-        responseData as T,
-        message: 'Success',
-      );
-    } else {
-      return ApiResponse.error(
-        'Request failed with status: ${response.statusCode}',
-        code: response.statusCode,
-      );
-    }
-  }
 
   ApiResponse<T> _handleError<T>(dynamic error) {
     if (error is DioException) {

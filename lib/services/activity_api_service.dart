@@ -11,9 +11,11 @@ class ActivityApiService {
 
   Future<List<ActivityModel>> getHomeActivityList() async {
     try {
-      final response = await _httpService.getList<ActivityModel>(
+      final response = await _httpService.get<List<ActivityModel>>(
         '/activity/list/home',
-        fromJson: ActivityModel.fromJson,
+        converter: (data) => (data as List)
+            .map((json) => ActivityModel.fromJson(json as Map<String, dynamic>))
+            .toList(),
       );
       
       print('Response success: ${response.success}');
@@ -34,10 +36,13 @@ class ActivityApiService {
 
   Future<ActivityModel?> getActivityById(String activityId) async {
     try {
-      final response = await _httpService.get<Map<String, dynamic>>('/activity/$activityId');
+      final response = await _httpService.get<ActivityModel>(
+        '/activity/$activityId',
+        converter: (data) => ActivityModel.fromJson(data as Map<String, dynamic>),
+      );
       
       if (response.success && response.data != null) {
-        return ActivityModel.fromJson(response.data!);
+        return response.data!;
       }
       
       return null;

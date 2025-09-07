@@ -7,6 +7,7 @@ import 'package:get_storage/get_storage.dart';
 import 'controllers/theme_controller.dart';
 import 'controllers/locale_controller.dart';
 import 'services/http_service.dart';
+import 'utils/storage_manager.dart';
 import 'routes/app_pages.dart';
 import 'routes/routes.dart';
 import 'l10n/app_localizations.dart';
@@ -14,7 +15,9 @@ import 'l10n/app_localizations.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   
+  // 初始化本地存储
   await GetStorage.init();
+  await StorageManager.init();
   
   await _initServices();
   
