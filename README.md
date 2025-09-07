@@ -241,3 +241,99 @@ allprojects {
 
 ### 下一步
 完成环境配置后，重新运行构建命令即可成功生成 APK 文件。
+
+## iOS 目录结构说明
+
+Flutter 项目中的 `ios/` 目录包含了所有 iOS 平台相关的配置和代码文件：
+
+### 📁 主要目录结构
+```
+ios/
+├── Flutter/                # Flutter 相关配置
+│   └── AppFrameworkInfo.plist
+├── Runner/                 # iOS 应用主模块
+│   ├── AppDelegate.swift   # 应用启动入口
+│   ├── Info.plist         # 应用配置信息
+│   ├── Assets.xcassets/   # 图标和启动图资源
+│   ├── Base.lproj/        # 本地化文件
+│   └── Generated*.{h,m}   # 自动生成的插件文件
+├── Runner.xcodeproj/      # Xcode 项目文件
+├── Runner.xcworkspace/    # Xcode 工作空间
+├── RunnerTests/           # 单元测试文件
+└── Podfile               # CocoaPods 依赖管理
+```
+
+### 📄 核心文件说明
+
+#### 配置文件
+- **Info.plist** - iOS 应用信息配置文件
+  - 应用名称、版本号、Bundle ID
+  - 权限配置（相机、位置、网络等）
+  - 支持的设备方向和 iOS 版本
+  - URL Schemes 和深度链接配置
+
+- **Podfile** - CocoaPods 依赖管理
+  - 管理 iOS 原生依赖库
+  - 设置最低 iOS 版本支持
+  - 配置 Flutter 框架集成
+
+#### 应用入口
+- **AppDelegate.swift** - iOS 应用启动委托
+  - 应用生命周期管理
+  - Flutter 引擎初始化
+  - 处理应用启动、后台、恢复等状态
+  - 原生功能集成入口点
+
+#### 项目配置
+- **Runner.xcodeproj** - Xcode 项目配置
+  - 编译设置和构建配置
+  - 代码签名和证书配置
+  - 目标设备和架构设置
+
+- **Runner.xcworkspace** - Xcode 工作空间
+  - 集成 CocoaPods 依赖
+  - 管理多个项目和库的关系
+
+#### 资源文件
+- **Assets.xcassets** - 应用图标和启动图
+  - App 图标（不同尺寸）
+  - 启动屏幕图片
+  - 其他应用内图标资源
+
+- **Base.lproj** - 国际化和本地化
+  - LaunchScreen.storyboard（启动屏幕）
+  - 多语言支持文件
+
+#### 自动生成文件
+- **GeneratedPluginRegistrant.{h,m}** - 插件注册文件
+  - 自动生成，用于注册 Flutter 插件
+  - 包含 Objective-C 头文件和实现文件
+  - 请勿手动修改
+
+- **Runner-Bridging-Header.h** - Swift-Objective-C 桥接文件
+  - 用于 Swift 和 Objective-C 代码互操作
+  - 导入需要在 Swift 中使用的 Objective-C 头文件
+
+### 🔧 常见修改场景
+
+1. **应用信息配置**: 修改 `Info.plist` 中的应用名称、版本等
+2. **权限配置**: 在 `Info.plist` 中添加所需权限说明
+3. **应用图标**: 替换 `Assets.xcassets` 中的图标文件
+4. **启动屏幕**: 修改 `LaunchScreen.storyboard`
+5. **原生代码集成**: 在 `AppDelegate.swift` 中添加原生功能
+6. **依赖管理**: 修改 `Podfile` 添加原生库依赖
+7. **代码签名**: 在 Xcode 项目中配置开发者证书
+
+### 🍎 iOS 特有注意事项
+- **开发者账号**: 真机测试和发布需要 Apple 开发者账号
+- **代码签名**: 必须配置正确的证书和描述文件
+- **App Store 审核**: 发布前需通过 Apple 的审核流程
+- **iOS 版本兼容**: 注意设置合适的最低支持 iOS 版本
+- **权限申请**: iOS 对权限管理很严格，需要详细说明用途
+
+### 💡 注意事项
+- 修改 iOS 配置需要在 macOS 上进行
+- Xcode 是必需的开发工具
+- 真机调试需要开发者证书
+- 不要手动修改自动生成的文件
+- Pod 依赖变更后需要运行 `pod install`
