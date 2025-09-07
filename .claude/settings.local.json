@@ -5,7 +5,9 @@
       "Bash(flutter gen-l10n:*)",
       "Bash(flutter analyze:*)",
       "Bash(flutter run:*)",
-      "Bash(flutter packages pub run:*)"
+      "Bash(flutter packages pub run:*)",
+      "Bash(flutter clean:*)",
+      "Bash(flutter build:*)"
     ],
     "deny": [],
     "ask": []

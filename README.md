@@ -112,3 +112,132 @@ HttpService 已封装好常用的 HTTP 方法：
 - 确保在 `HttpService` 中配置正确的 API 基础地址
 - 所有网络请求都有统一的错误处理
 - 主题和语言设置会自动保存到本地存储
+
+## APK 打包步骤
+
+### 环境要求
+- Flutter SDK (当前版本 3.32.1)
+- Android Studio 或 Android SDK
+- Java Development Kit (JDK)
+
+### 遇到的问题及解决方案
+
+#### 1. Android SDK 配置问题
+当前项目在打包时遇到以下问题：
+- **cmdline-tools 组件缺失**
+- **Android 许可证状态未知**
+- **Gradle 下载超时或文件损坏**
+
+#### 2. 解决步骤
+
+##### 步骤 1: 安装 Android SDK 命令行工具
+```bash
+# 方法一：通过 Android Studio 安装
+# 1. 打开 Android Studio
+# 2. 进入 Preferences -> Appearance & Behavior -> System Settings -> Android SDK
+# 3. 选择 "SDK Tools" 标签
+# 4. 勾选 "Android SDK Command-line Tools (latest)"
+# 5. 点击 Apply 安装
+
+# 方法二：手动下载安装
+# 从 https://developer.android.com/studio#command-line-tools-only 下载
+# 解压到 $ANDROID_HOME/cmdline-tools/latest/
+```
+
+##### 步骤 2: 设置环境变量
+```bash
+# 在 ~/.zshrc 或 ~/.bash_profile 中添加：
+export ANDROID_HOME=~/Library/Android/sdk
+export PATH=$PATH:$ANDROID_HOME/cmdline-tools/latest/bin
+export PATH=$PATH:$ANDROID_HOME/platform-tools
+export PATH=$PATH:$ANDROID_HOME/emulator
+
+  1. 安装 Android SDK Command-line Tools：
+    - 打开 Android Studio
+    - 进入 SDK Manager
+    - 安装 "Android SDK Command-line Tools (latest)"
+  2. 接受许可证：
+  flutter doctor --android-licenses
+
+```
+
+##### 步骤 3: 接受 Android 许可证
+```bash
+flutter doctor --android-licenses
+# 输入 'y' 接受所有许可证
+```
+
+##### 步骤 4: 清理并重新构建
+```bash
+# 清理项目缓存
+flutter clean
+rm -rf ~/.gradle  # 清理 Gradle 缓存（如果有问题）
+
+# 获取依赖
+flutter pub get
+
+# 检查环境
+flutter doctor
+```
+
+##### 步骤 5: 构建 APK
+```bash
+# 构建 release 版本 APK
+flutter build apk --release
+
+# 或者构建分架构的 APK（减小文件大小）
+flutter build apk --split-per-abi
+
+# 或者构建 debug 版本用于测试
+flutter build apk --debug
+```
+
+### APK 输出位置
+构建成功后，APK 文件将位于：
+```
+build/app/outputs/flutter-apk/
+├── app-release.apk              # 通用版本
+├── app-arm64-v8a-release.apk    # ARM64 版本
+├── app-armeabi-v7a-release.apk  # ARM32 版本
+└── app-x86_64-release.apk       # x86_64 版本
+```
+
+### 常见问题排除
+
+#### Gradle 下载超时
+```bash
+# 删除损坏的 Gradle 缓存
+rm -rf ~/.gradle/wrapper/dists/gradle-*
+
+rm -rf ~/.gradle/wrapper/dists
+flutter clean
+flutter pub get
+
+# 或者完全重置 Gradle
+rm -rf ~/.gradle
+```
+
+#### 网络问题
+如果在国内网络环境下构建缓慢，可以配置镜像：
+
+在 `android/build.gradle` 中添加：
+```gradle
+allprojects {
+    repositories {
+        maven { url 'https://maven.aliyun.com/repository/google' }
+        maven { url 'https://maven.aliyun.com/repository/central' }
+        maven { url 'https://maven.aliyun.com/repository/gradle-plugin' }
+        google()
+        mavenCentral()
+    }
+}
+```
+
+### 构建说明
+1. 首次构建可能需要较长时间下载依赖
+2. 确保网络连接稳定
+3. 如果使用的是 M1/M2 Mac，可能需要额外配置
+4. 构建前建议运行 `flutter doctor` 确保环境正常
+
+### 下一步
+完成环境配置后，重新运行构建命令即可成功生成 APK 文件。
