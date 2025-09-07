@@ -1,0 +1,47 @@
+{
+  "@@locale": "en",
+  "appTitle": "ClaudeCodeFlt",
+  "@appTitle": {
+    "description": "The title of the application"
+  },
+  "home": "Home",
+  "@home": {
+    "description": "Home tab label"
+  },
+  "reward": "Reward",
+  "@reward": {
+    "description": "Reward tab label"
+  },
+  "account": "Account",
+  "@account": {
+    "description": "Account tab label"
+  },
+  "welcome": "Welcome!",
+  "@welcome": {
+    "description": "Welcome message"
+  },
+  "settings": "Settings",
+  "@settings": {
+    "description": "Settings"
+  },
+  "language": "Language",
+  "@language": {
+    "description": "Language setting"
+  },
+  "theme": "Theme",
+  "@theme": {
+    "description": "Theme setting"
+  },
+  "light": "Light",
+  "@light": {
+    "description": "Light theme"
+  },
+  "dark": "Dark",
+  "@dark": {
+    "description": "Dark theme"
+  },
+  "system": "System",
+  "@system": {
+    "description": "System theme"
+  }
+}

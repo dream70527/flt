@@ -1,0 +1,14 @@
+{
+  "@@locale": "zh",
+  "appTitle": "ClaudeCode应用",
+  "home": "首页",
+  "reward": "奖励",
+  "account": "账户",
+  "welcome": "欢迎1！",
+  "settings": "设置",
+  "language": "语言",
+  "theme": "主题",
+  "light": "亮色",
+  "dark": "暗色",
+  "system": "跟随系统"
+}
