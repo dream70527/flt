@@ -1,10 +1,12 @@
 import 'package:get/get.dart';
 import '../pages/main_page.dart';
 import '../pages/login_page.dart';
+import '../pages/game_page.dart';
 import '../pages/settings_page.dart';
 import '../pages/about_page.dart';
 import '../bindings/main_binding.dart';
 import '../bindings/auth_binding.dart';
+import '../bindings/game_binding.dart';
 import '../bindings/about_binding.dart';
 import 'routes.dart';
 
@@ -24,6 +26,11 @@ class AppPages {
       name: Routes.login,
       page: () => const LoginPage(),
       binding: AuthBinding(),
+    ),
+    GetPage(
+      name: Routes.game,
+      page: () => const GamePage(),
+      binding: GameBinding(),
     ),
     GetPage(
       name: Routes.settings,
