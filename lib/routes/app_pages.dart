@@ -4,6 +4,7 @@ import '../pages/login_page.dart';
 import '../pages/game_page.dart';
 import '../pages/settings_page.dart';
 import '../pages/about_page.dart';
+import '../pages/layout_demo_page.dart';
 import '../bindings/main_binding.dart';
 import '../bindings/auth_binding.dart';
 import '../bindings/game_binding.dart';
@@ -40,6 +41,10 @@ class AppPages {
       name: Routes.about,
       page: () => const AboutPage(),
       binding: AboutBinding(),
+    ),
+    GetPage(
+      name: Routes.layoutDemo,
+      page: () => const LayoutDemoPage(),
     ),
   ];
 }
