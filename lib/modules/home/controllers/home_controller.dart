@@ -1,6 +1,6 @@
 import 'package:get/get.dart';
-import '../models/activity_model.dart';
-import '../services/activity_api_service.dart';
+import '../../../models/activity_model.dart';
+import '../../../services/activity_api_service.dart';
 
 class HomeController extends GetxController {
   final _isLoading = false.obs;

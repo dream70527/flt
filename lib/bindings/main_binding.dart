@@ -1,6 +1,6 @@
 import 'package:get/get.dart';
 import '../controllers/main_controller.dart';
-import '../controllers/home_controller.dart';
+import '../modules/home/controllers/home_controller.dart';
 import '../controllers/reward_controller.dart';
 import '../controllers/account_controller.dart';
 import '../controllers/auth_controller.dart';

@@ -20,6 +20,9 @@ class AuthController extends GetxController {
   final Rxn<CaptchaEntity> captcha = Rxn<CaptchaEntity>();
   final RxBool isCaptchaLoading = false.obs;
   
+  // 重定向路由 (用于登录后跳转回原页面)
+  String? _redirectRoute;
+  
   @override
   void onInit() {
     super.onInit();
@@ -107,6 +110,15 @@ class AuthController extends GetxController {
         }
         
         Get.snackbar('成功', '登录成功');
+        
+        // 登录成功后，检查是否有重定向路由
+        final redirectRoute = getAndClearRedirectRoute();
+        if (redirectRoute != null && redirectRoute.isNotEmpty) {
+          Get.offAllNamed(redirectRoute);
+        } else {
+          Get.offAllNamed('/main');
+        }
+        
         return true;
       }
       
@@ -147,6 +159,31 @@ class AuthController extends GetxController {
     if (!isLoggedIn.value) {
       Get.toNamed('/login'); // 跳转到登录页面
     }
+  }
+  
+  /// 设置重定向路由
+  void setRedirectRoute(String? route) {
+    _redirectRoute = route;
+  }
+  
+  /// 获取重定向路由并清除
+  String? getAndClearRedirectRoute() {
+    final route = _redirectRoute;
+    _redirectRoute = null;
+    return route;
+  }
+  
+  /// 检查用户是否有特定角色权限
+  bool hasRole(String role) {
+    // 这里根据实际业务逻辑判断用户权限
+    // 示例：从userInfo中获取角色信息
+    if (userInfo.value == null) return false;
+    
+    // TODO: 根据实际的用户模型调整
+    // return userInfo.value!.roles?.contains(role) ?? false;
+    
+    // 临时实现：假设所有登录用户都有基础权限
+    return isLoggedIn.value;
   }
   
   /// 刷新token（可选功能）

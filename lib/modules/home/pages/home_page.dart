@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import '../controllers/home_controller.dart';
-import '../routes/routes.dart';
-import '../l10n/app_localizations.dart';
+import '../../../routes/routes.dart';
+import '../../../l10n/app_localizations.dart';
 
 class HomePage extends GetView<HomeController> {
   const HomePage({super.key});
@@ -78,6 +78,11 @@ class HomePage extends GetView<HomeController> {
                 
                 // 布局演示入口按钮
                 _buildLayoutDemoEntry(context),
+                
+                SizedBox(height: 20.h),
+                
+                // 权限测试按钮
+                _buildAuthTestButtons(context),
                 
                 SizedBox(height: 20.h),
                 if (controller.activities.isNotEmpty)
@@ -279,6 +284,63 @@ class HomePage extends GetView<HomeController> {
               ],
             ),
           ),
+        ),
+      ),
+    );
+  }
+
+  /// 构建权限测试按钮
+  Widget _buildAuthTestButtons(BuildContext context) {
+    return Card(
+      child: Padding(
+        padding: EdgeInsets.all(16.w),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              '权限控制测试',
+              style: TextStyle(
+                fontSize: 18.sp,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            SizedBox(height: 12.h),
+            Row(
+              children: [
+                Expanded(
+                  child: ElevatedButton.icon(
+                    onPressed: () => Get.toNamed(Routes.settings),
+                    icon: const Icon(Icons.settings),
+                    label: const Text('设置页面'),
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.blue,
+                      foregroundColor: Colors.white,
+                    ),
+                  ),
+                ),
+                SizedBox(width: 12.w),
+                Expanded(
+                  child: ElevatedButton.icon(
+                    onPressed: () => Get.toNamed(Routes.admin),
+                    icon: const Icon(Icons.admin_panel_settings),
+                    label: const Text('管理页面'),
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.red,
+                      foregroundColor: Colors.white,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+            SizedBox(height: 8.h),
+            Text(
+              '• 设置页面：需要登录\n• 管理页面：需要admin权限',
+              style: TextStyle(
+                fontSize: 12.sp,
+                color: Colors.grey.shade600,
+              ),
+            ),
+          ],
         ),
       ),
     );

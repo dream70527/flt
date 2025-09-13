@@ -3,7 +3,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import '../controllers/main_controller.dart';
 import '../l10n/app_localizations.dart';
-import 'home_page.dart';
+import '../modules/home/pages/home_page.dart';
 import 'reward_page.dart';
 import 'account_page.dart';
 
