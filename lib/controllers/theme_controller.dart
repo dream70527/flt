@@ -10,16 +10,30 @@ class ThemeController extends GetxController {
   final _themeMode = ThemeType.system.obs;
   ThemeType get themeMode => _themeMode.value;
   
+  // 定义应用主色调
+  static const Color primaryColor = Color(0xFF6366F1); // 紫蓝色
+  static const Color secondaryColor = Color(0xFF10B981); // 绿色
+  static const Color accentColor = Color(0xFFEF4444); // 红色
+  
   final ThemeData lightTheme = ThemeData(
     useMaterial3: true,
     brightness: Brightness.light,
     colorScheme: ColorScheme.fromSeed(
-      seedColor: Colors.blue,
+      seedColor: primaryColor,
       brightness: Brightness.light,
     ),
-    appBarTheme: const AppBarTheme(
+    primaryColor: primaryColor,
+    appBarTheme: AppBarTheme(
       centerTitle: true,
       elevation: 0,
+      backgroundColor: primaryColor,
+      foregroundColor: Colors.white,
+    ),
+    elevatedButtonTheme: ElevatedButtonThemeData(
+      style: ElevatedButton.styleFrom(
+        backgroundColor: primaryColor,
+        foregroundColor: Colors.white,
+      ),
     ),
   );
 
@@ -27,12 +41,21 @@ class ThemeController extends GetxController {
     useMaterial3: true,
     brightness: Brightness.dark,
     colorScheme: ColorScheme.fromSeed(
-      seedColor: Colors.blue,
+      seedColor: primaryColor,
       brightness: Brightness.dark,
     ),
-    appBarTheme: const AppBarTheme(
+    primaryColor: primaryColor,
+    appBarTheme: AppBarTheme(
       centerTitle: true,
       elevation: 0,
+      backgroundColor: primaryColor,
+      foregroundColor: Colors.white,
+    ),
+    elevatedButtonTheme: ElevatedButtonThemeData(
+      style: ElevatedButton.styleFrom(
+        backgroundColor: primaryColor,
+        foregroundColor: Colors.white,
+      ),
     ),
   );
 

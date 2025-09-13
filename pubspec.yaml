@@ -56,7 +56,7 @@ dependencies:
   crypto: ^3.0.3
   
   # JSON serialization
-  json_annotation: ^4.8.1
+  json_annotation: ^4.9.0
   
   # WebView for game pages
   webview_flutter: ^4.4.2

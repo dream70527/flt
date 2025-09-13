@@ -1,10 +1,6 @@
 import 'package:get/get.dart';
 
 class MainController extends GetxController {
-  final _selectedIndex = 0.obs;
-  int get selectedIndex => _selectedIndex.value;
-
-  void changeTab(int index) {
-    _selectedIndex.value = index;
-  }
+  // 主控制器现在主要用于全局状态管理
+  // Tab状态由路由本身维护，不需要在这里管理
 }

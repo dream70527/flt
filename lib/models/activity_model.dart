@@ -1,9 +1,12 @@
+import 'package:claudecodeflt/models/address_model.dart';
 import 'package:json_annotation/json_annotation.dart';
 
 part 'activity_model.g.dart';
 
-@JsonSerializable()
+@JsonSerializable(explicitToJson: true)
 class ActivityModel {
+  Address address;
+
   int no;
   String type;
   @JsonKey(name: 'activity_id')
@@ -27,6 +30,7 @@ class ActivityModel {
   String? config;
 
   ActivityModel({
+    required this.address,
     this.no = 0,
     this.type = '',
     this.activityId = '',

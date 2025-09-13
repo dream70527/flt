@@ -24,9 +24,9 @@ class HomePage extends GetView<HomeController> {
         ],
       ),
       body: Obx(() {
-        if (controller.isLoading) {
-          return const Center(child: CircularProgressIndicator());
-        }
+        // if (controller.isLoading) {
+        //   return const Center(child: CircularProgressIndicator());
+        // }
 
         return RefreshIndicator(
           onRefresh: controller.refresh,
@@ -78,6 +78,16 @@ class HomePage extends GetView<HomeController> {
                 
                 // 布局演示入口按钮
                 _buildLayoutDemoEntry(context),
+                
+                SizedBox(height: 20.h),
+                
+                // Flutter三棵树演示入口
+                _buildTreeSimulationEntry(context),
+                
+                SizedBox(height: 20.h),
+                
+                // GetX弹窗演示入口
+                _buildDialogDemoEntry(context),
                 
                 SizedBox(height: 20.h),
                 
@@ -268,6 +278,162 @@ class HomePage extends GetView<HomeController> {
                       SizedBox(height: 4.h),
                       Text(
                         '查看常用布局组件示例',
+                        style: TextStyle(
+                          fontSize: 14.sp,
+                          color: Colors.white.withValues(alpha: 0.8),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                Icon(
+                  Icons.arrow_forward_ios,
+                  color: Colors.white,
+                  size: 20.w,
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  /// 构建Flutter三棵树演示入口
+  Widget _buildTreeSimulationEntry(BuildContext context) {
+    return Container(
+      width: double.infinity,
+      margin: EdgeInsets.symmetric(horizontal: 0.w),
+      child: Card(
+        elevation: 4,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(12.r),
+        ),
+        child: InkWell(
+          onTap: () => Get.toNamed(Routes.treeSimulation),
+          borderRadius: BorderRadius.circular(12.r),
+          child: Container(
+            padding: EdgeInsets.all(20.w),
+            decoration: BoxDecoration(
+              gradient: LinearGradient(
+                colors: [
+                  Colors.purple.shade400,
+                  Colors.purple.shade600,
+                ],
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+              ),
+              borderRadius: BorderRadius.circular(12.r),
+            ),
+            child: Row(
+              children: [
+                Container(
+                  width: 60.w,
+                  height: 60.w,
+                  decoration: BoxDecoration(
+                    color: Colors.white.withValues(alpha: 0.2),
+                    borderRadius: BorderRadius.circular(12.r),
+                  ),
+                  child: Icon(
+                    Icons.account_tree,
+                    color: Colors.white,
+                    size: 32.w,
+                  ),
+                ),
+                SizedBox(width: 16.w),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        'Flutter 三棵树演示',
+                        style: TextStyle(
+                          fontSize: 18.sp,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.white,
+                        ),
+                      ),
+                      SizedBox(height: 4.h),
+                      Text(
+                        '深入理解Widget、Element、RenderObject',
+                        style: TextStyle(
+                          fontSize: 14.sp,
+                          color: Colors.white.withValues(alpha: 0.8),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                Icon(
+                  Icons.arrow_forward_ios,
+                  color: Colors.white,
+                  size: 20.w,
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  /// 构建GetX弹窗演示入口
+  Widget _buildDialogDemoEntry(BuildContext context) {
+    return Container(
+      width: double.infinity,
+      margin: EdgeInsets.symmetric(horizontal: 0.w),
+      child: Card(
+        elevation: 4,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(12.r),
+        ),
+        child: InkWell(
+          onTap: () => Get.toNamed(Routes.dialogDemo),
+          borderRadius: BorderRadius.circular(12.r),
+          child: Container(
+            padding: EdgeInsets.all(20.w),
+            decoration: BoxDecoration(
+              gradient: LinearGradient(
+                colors: [
+                  Colors.teal.shade400,
+                  Colors.teal.shade600,
+                ],
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+              ),
+              borderRadius: BorderRadius.circular(12.r),
+            ),
+            child: Row(
+              children: [
+                Container(
+                  width: 60.w,
+                  height: 60.w,
+                  decoration: BoxDecoration(
+                    color: Colors.white.withValues(alpha: 0.2),
+                    borderRadius: BorderRadius.circular(12.r),
+                  ),
+                  child: Icon(
+                    Icons.chat_bubble_outline,
+                    color: Colors.white,
+                    size: 32.w,
+                  ),
+                ),
+                SizedBox(width: 16.w),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        'GetX 自定义弹窗',
+                        style: TextStyle(
+                          fontSize: 18.sp,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.white,
+                        ),
+                      ),
+                      SizedBox(height: 4.h),
+                      Text(
+                        '黑色标题栏、圆角设计、多种弹窗类型',
                         style: TextStyle(
                           fontSize: 14.sp,
                           color: Colors.white.withValues(alpha: 0.8),

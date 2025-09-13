@@ -8,6 +8,7 @@ part of 'activity_model.dart';
 
 ActivityModel _$ActivityModelFromJson(Map<String, dynamic> json) =>
     ActivityModel(
+      address: Address.fromJson(json['address'] as Map<String, dynamic>),
       no: (json['no'] as num?)?.toInt() ?? 0,
       type: json['type'] as String? ?? '',
       activityId: json['activity_id'] as String? ?? '',
@@ -28,6 +29,7 @@ ActivityModel _$ActivityModelFromJson(Map<String, dynamic> json) =>
 
 Map<String, dynamic> _$ActivityModelToJson(ActivityModel instance) =>
     <String, dynamic>{
+      'address': instance.address.toJson(),
       'no': instance.no,
       'type': instance.type,
       'activity_id': instance.activityId,
