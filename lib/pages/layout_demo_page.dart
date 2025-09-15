@@ -1,4 +1,92 @@
 import 'package:flutter/material.dart';
+import 'dart:math' as math;
+
+class DashedBorderPainter extends CustomPainter {
+  final Color color;
+  final double strokeWidth;
+  final double dashLength;
+  final double gapLength;
+  final double borderRadius;
+
+  const DashedBorderPainter({
+    this.color = Colors.black,
+    this.strokeWidth = 1.0,
+    this.dashLength = 5.0,
+    this.gapLength = 3.0,
+    this.borderRadius = 0.0,
+  });
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    final paint = Paint()
+      ..color = color
+      ..strokeWidth = strokeWidth
+      ..style = PaintingStyle.stroke;
+
+    if (borderRadius > 0) {
+      _drawDashedRoundedRect(canvas, size, paint);
+    } else {
+      _drawDashedRect(canvas, size, paint);
+    }
+  }
+
+  void _drawDashedRect(Canvas canvas, Size size, Paint paint) {
+    final path = Path();
+    
+    // Top line
+    _drawDashedLine(canvas, paint, Offset(0, 0), Offset(size.width, 0));
+    // Right line
+    _drawDashedLine(canvas, paint, Offset(size.width, 0), Offset(size.width, size.height));
+    // Bottom line
+    _drawDashedLine(canvas, paint, Offset(size.width, size.height), Offset(0, size.height));
+    // Left line
+    _drawDashedLine(canvas, paint, Offset(0, size.height), Offset(0, 0));
+  }
+
+  void _drawDashedRoundedRect(Canvas canvas, Size size, Paint paint) {
+    final rect = Rect.fromLTWH(0, 0, size.width, size.height);
+    final rrect = RRect.fromRectAndRadius(rect, Radius.circular(borderRadius));
+    
+    final path = Path()..addRRect(rrect);
+    final pathMetrics = path.computeMetrics();
+    
+    for (final pathMetric in pathMetrics) {
+      final totalLength = pathMetric.length;
+      double distance = 0;
+      
+      while (distance < totalLength) {
+        final startDistance = distance;
+        final endDistance = math.min(distance + dashLength, totalLength);
+        
+        final startTangent = pathMetric.getTangentForOffset(startDistance);
+        final endTangent = pathMetric.getTangentForOffset(endDistance);
+        
+        if (startTangent != null && endTangent != null) {
+          canvas.drawLine(startTangent.position, endTangent.position, paint);
+        }
+        
+        distance += dashLength + gapLength;
+      }
+    }
+  }
+
+  void _drawDashedLine(Canvas canvas, Paint paint, Offset start, Offset end) {
+    final totalDistance = (end - start).distance;
+    final unitVector = (end - start) / totalDistance;
+    
+    double currentDistance = 0;
+    while (currentDistance < totalDistance) {
+      final segmentStart = start + unitVector * currentDistance;
+      final segmentEnd = start + unitVector * math.min(currentDistance + dashLength, totalDistance);
+      
+      canvas.drawLine(segmentStart, segmentEnd, paint);
+      currentDistance += dashLength + gapLength;
+    }
+  }
+
+  @override
+  bool shouldRepaint(covariant CustomPainter oldDelegate) => false;
+}
 
 class LayoutDemoPage extends StatelessWidget {
   const LayoutDemoPage({super.key});
@@ -256,6 +344,72 @@ class LayoutDemoPage extends StatelessWidget {
                   ),
                 ),
               ),
+            ),
+          ),
+          _buildLayoutSection(
+            '11. 虚线边框容器 - DashedBorder',
+            'Container(\n  decoration: BoxDecoration(\n    border: Border.all(\n      color: Colors.blue,\n      width: 2,\n      strokeAlign: BorderSide.strokeAlignInside,\n    ),\n    borderRadius: BorderRadius.circular(12),\n  ),\n  child: CustomPaint(\n    painter: DashedBorderPainter(),\n    child: Container(...),\n  ),\n)',
+            Column(
+              children: [
+                Container(
+                  width: 250,
+                  height: 120,
+                  child: CustomPaint(
+                    painter: DashedBorderPainter(
+                      color: Colors.blue,
+                      strokeWidth: 2,
+                      dashLength: 8,
+                      gapLength: 4,
+                    ),
+                    child: Container(
+                      margin: const EdgeInsets.all(2),
+                      padding: const EdgeInsets.all(16),
+                      child: const Center(
+                        child: Text(
+                          '虚线边框容器',
+                          style: TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.blue,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 16),
+                Container(
+                  width: 250,
+                  height: 120,
+                  child: CustomPaint(
+                    painter: DashedBorderPainter(
+                      color: Colors.red,
+                      strokeWidth: 3,
+                      dashLength: 12,
+                      gapLength: 6,
+                      borderRadius: 16,
+                    ),
+                    child: Container(
+                      margin: const EdgeInsets.all(3),
+                      padding: const EdgeInsets.all(16),
+                      decoration: BoxDecoration(
+                        color: Colors.red.shade50,
+                        borderRadius: BorderRadius.circular(13),
+                      ),
+                      child: const Center(
+                        child: Text(
+                          '圆角虚线边框',
+                          style: TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.red,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+              ],
             ),
           ),
         ],

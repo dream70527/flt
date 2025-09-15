@@ -7,10 +7,12 @@ class Routes {
   static const String about = '/about';
   static const String reward = '/reward';
   static const String layoutDemo = '/layout-demo';
+  static const String dashedContainerDemo = '/dashed-container-demo';
   static const String admin = '/admin';
   static const String optimizedDemo = '/optimized-demo';
   static const String treeSimulation = '/tree-simulation';
   static const String dialogDemo = '/dialog-demo';
+  static const String dropdownDemo = '/dropdown-demo';
   
   // Tab pages
   static const String tabHome = '/tab/home';

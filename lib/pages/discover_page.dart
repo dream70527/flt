@@ -47,7 +47,7 @@ class DiscoverPage extends GetView<DiscoverController> {
                 _buildTrendingCard(context),
                 
                 SizedBox(height: 24.h),
-                
+
                 // 分类导航
                 Text(
                   'Categories',
@@ -228,7 +228,7 @@ class DiscoverPage extends GetView<DiscoverController> {
         crossAxisCount: 2,
         crossAxisSpacing: 12.w,
         mainAxisSpacing: 12.h,
-        childAspectRatio: 1.5,
+        childAspectRatio: 1,
       ),
       itemCount: categories.length,
       itemBuilder: (context, index) {
@@ -236,7 +236,7 @@ class DiscoverPage extends GetView<DiscoverController> {
         return Card(
           child: InkWell(
             onTap: () => controller.openCategory(category['label'] as String),
-            borderRadius: BorderRadius.circular(8.r),
+            borderRadius: BorderRadius.circular(16.r),
             child: Container(
               padding: EdgeInsets.all(16.w),
               child: Column(

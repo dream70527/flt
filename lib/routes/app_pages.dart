@@ -1,9 +1,11 @@
+import 'package:claudecodeflt/pages/dropdown_demo_page.dart';
 import 'package:get/get.dart';
 import '../pages/login_page.dart';
 import '../pages/game_page.dart';
 import '../pages/settings_page.dart';
 import '../pages/about_page.dart';
 import '../pages/layout_demo_page.dart';
+import '../pages/dashed_container_demo.dart';
 import '../pages/admin_page.dart';
 import '../pages/main_tab_container.dart';
 import '../pages/optimized_demo_page.dart';
@@ -64,6 +66,10 @@ class AppPages {
       page: () => const LayoutDemoPage(),
     ),
     GetPage(
+      name: Routes.dashedContainerDemo,
+      page: () => const DashedContainerDemo(),
+    ),
+    GetPage(
       name: Routes.treeSimulation,
       page: () => const TreeSimulationDemo(),
     ),
@@ -71,6 +77,10 @@ class AppPages {
       name: Routes.dialogDemo,
       page: () => const DialogDemoPage(),
       binding: DialogBinding(),
+    ),
+    GetPage(
+      name: Routes.dropdownDemo,
+      page: () => const DropdownDemoPage(),
     ),
     // 演示权限控制的页面
     GetPage(
