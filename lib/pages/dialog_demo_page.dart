@@ -188,9 +188,7 @@ class DialogDemoPage extends GetView<DialogController> {
                       DialogUtils.showInfo(
                         title: '信息提示',
                         message: '这是一个信息提示弹窗，用于显示重要信息。',
-                        onConfirm: () {
-                          Get.snackbar('信息', '用户已查看信息');
-                        },
+
                       );
                     },
                     icon: Icon(Icons.info_outline),
@@ -300,20 +298,13 @@ class DialogDemoPage extends GetView<DialogController> {
                         message: '确定要删除这个重要文件吗？\n\n此操作不可撤销！',
                         confirmText: '删除',
                         cancelText: '保留',
-                        onConfirm: () {
-                          Get.snackbar(
-                            '已删除', 
-                            '文件已删除',
-                            backgroundColor: Colors.red.shade100,
-                          );
-                        },
-                        onCancel: () {
-                          Get.snackbar(
-                            '已保留', 
-                            '文件已保留',
-                            backgroundColor: Colors.green.shade100,
-                          );
-                        },
+                        // onConfirm: () {
+                        //   Get.snackbar(
+                        //     '已删除',
+                        //     '文件已删除',
+                        //     backgroundColor: Colors.red.shade100,
+                        //   );
+                        // },
                       );
                     },
                     icon: Icon(Icons.delete_outline),

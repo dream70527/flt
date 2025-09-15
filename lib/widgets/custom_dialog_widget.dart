@@ -177,32 +177,85 @@ class CustomDialogWidget extends StatelessWidget {
 
 /// 弹窗工具类
 class DialogUtils {
-  static final DialogController _controller = Get.find<DialogController>();
+  /// 获取或创建DialogController
+  static DialogController _getController() {
+    try {
+      return Get.find<DialogController>();
+    } catch (e) {
+      return Get.put<DialogController>(DialogController());
+    }
+  }
+
+  /// 显示基础自定义弹窗
+  static void showCustom({
+    String title = '提示',
+    required String message,
+    String confirmText = '确定',
+    String cancelText = '取消',
+    VoidCallback? onConfirm,
+    VoidCallback? onCancel,
+  }) {
+    final controller = _getController();
+    controller.showCustomDialog(
+      title: title,
+      content: message,
+      topButton: confirmText,
+      bottomButton: cancelText,
+      onTopPressed: () {
+        controller.closeDialog();
+        onConfirm?.call();
+      },
+      onBottomPressed: () {
+        controller.closeDialog();
+        onCancel?.call();
+      },
+    );
+  }
+
+  /// Promise风格的确认弹窗
+  static Future<bool> showConfirm({
+    String title = '确认',
+    required String message,
+    String confirmText = '确认',
+    String cancelText = '取消',
+  }) {
+    final controller = _getController();
+    return controller.showDialogWithPromise(
+      title: title,
+      content: message,
+      confirmText: confirmText,
+      cancelText: cancelText,
+    );
+  }
+
+  /// Promise风格的信息弹窗
+  static Future<void> showInfo({
+    String title = '信息',
+    required String message,
+    String confirmText = '知道了',
+  }) {
+    final controller = _getController();
+    return controller.showInfoWithPromise(message);
+  }
 
   /// 显示信息弹窗
-  static void showInfo({
+  static void showInfoDialog({
     required String title,
     required String message,
     String confirmText = '确定',
     VoidCallback? onConfirm,
   }) {
-    Get.dialog(
-      CustomDialogWidget(
-        title: title,
-        content: message,
-        topButtonText: confirmText,
-        bottomButtonText: '取消',
-        onTopPressed: () {
-          Get.back();
-          onConfirm?.call();
-        },
-      ),
-      barrierDismissible: true,
+    showCustom(
+      title: title,
+      message: message,
+      confirmText: confirmText,
+      cancelText: '取消',
+      onConfirm: onConfirm,
     );
   }
 
   /// 显示确认弹窗
-  static void showConfirm({
+  static void showConfirmDialog({
     required String title,
     required String message,
     String confirmText = '确认',
@@ -210,22 +263,13 @@ class DialogUtils {
     VoidCallback? onConfirm,
     VoidCallback? onCancel,
   }) {
-    Get.dialog(
-      CustomDialogWidget(
-        title: title,
-        content: message,
-        topButtonText: confirmText,
-        bottomButtonText: cancelText,
-        onTopPressed: () {
-          Get.back();
-          onConfirm?.call();
-        },
-        onBottomPressed: () {
-          Get.back();
-          onCancel?.call();
-        },
-      ),
-      barrierDismissible: true,
+    showCustom(
+      title: title,
+      message: message,
+      confirmText: confirmText,
+      cancelText: cancelText,
+      onConfirm: onConfirm,
+      onCancel: onCancel,
     );
   }
 
@@ -235,18 +279,12 @@ class DialogUtils {
     String confirmText = '知道了',
     VoidCallback? onConfirm,
   }) {
-    Get.dialog(
-      CustomDialogWidget(
-        title: '⚠️ 警告',
-        content: message,
-        topButtonText: confirmText,
-        bottomButtonText: '忽略',
-        onTopPressed: () {
-          Get.back();
-          onConfirm?.call();
-        },
-      ),
-      barrierDismissible: true,
+    showCustom(
+      title: '⚠️ 警告',
+      message: message,
+      confirmText: confirmText,
+      cancelText: '忽略',
+      onConfirm: onConfirm,
     );
   }
 
@@ -256,18 +294,12 @@ class DialogUtils {
     String confirmText = '太好了',
     VoidCallback? onConfirm,
   }) {
-    Get.dialog(
-      CustomDialogWidget(
-        title: '✅ 成功',
-        content: message,
-        topButtonText: confirmText,
-        bottomButtonText: '关闭',
-        onTopPressed: () {
-          Get.back();
-          onConfirm?.call();
-        },
-      ),
-      barrierDismissible: true,
+    showCustom(
+      title: '✅ 成功',
+      message: message,
+      confirmText: confirmText,
+      cancelText: '关闭',
+      onConfirm: onConfirm,
     );
   }
 
@@ -277,18 +309,112 @@ class DialogUtils {
     String confirmText = '重试',
     VoidCallback? onConfirm,
   }) {
-    Get.dialog(
-      CustomDialogWidget(
-        title: '❌ 错误',
-        content: message,
-        topButtonText: confirmText,
-        bottomButtonText: '取消',
-        onTopPressed: () {
-          Get.back();
-          onConfirm?.call();
-        },
-      ),
-      barrierDismissible: true,
+    showCustom(
+      title: '❌ 错误',
+      message: message,
+      confirmText: confirmText,
+      cancelText: '取消',
+      onConfirm: onConfirm,
+    );
+  }
+
+  // === Promise风格方法 ===
+
+  /// Promise风格删除确认
+  static Future<bool> confirmDelete(String itemName) {
+    return showConfirm(
+      title: '确认删除',
+      message: '确定要删除"$itemName"吗？\n\n此操作不可撤销！',
+      confirmText: '删除',
+      cancelText: '保留',
+    );
+  }
+
+  /// Promise风格保存确认
+  static Future<bool> confirmSave([String? message]) {
+    return showConfirm(
+      title: '保存确认',
+      message: message ?? '是否保存当前更改？',
+      confirmText: '保存',
+      cancelText: '不保存',
+    );
+  }
+
+  /// Promise风格退出确认
+  static Future<bool> confirmExit([String? message]) {
+    return showConfirm(
+      title: '退出确认',
+      message: message ?? '确定要退出吗？',
+      confirmText: '退出',
+      cancelText: '取消',
+    );
+  }
+
+  /// Promise风格操作流程
+  static Future<bool> showWorkflow({
+    required String title,
+    required String message,
+    String confirmText = '开始',
+    String cancelText = '取消',
+  }) async {
+    final confirmed = await showConfirm(
+      title: title,
+      message: message,
+      confirmText: confirmText,
+      cancelText: cancelText,
+    );
+
+    if (confirmed) {
+      // 显示进度提示
+      Get.snackbar('执行中', '正在执行操作...');
+      return true;
+    } else {
+      Get.snackbar('已取消', '用户取消了操作');
+      return false;
+    }
+  }
+
+  /// 快速成功提示
+  static void quickSuccess(String message) {
+    Get.snackbar(
+      '✅ 成功',
+      message,
+      backgroundColor: Colors.green.shade100,
+      colorText: Colors.green.shade800,
+      duration: Duration(seconds: 2),
+    );
+  }
+
+  /// 快速错误提示
+  static void quickError(String message) {
+    Get.snackbar(
+      '❌ 错误',
+      message,
+      backgroundColor: Colors.red.shade100,
+      colorText: Colors.red.shade800,
+      duration: Duration(seconds: 3),
+    );
+  }
+
+  /// 快速警告提示
+  static void quickWarning(String message) {
+    Get.snackbar(
+      '⚠️ 警告',
+      message,
+      backgroundColor: Colors.orange.shade100,
+      colorText: Colors.orange.shade800,
+      duration: Duration(seconds: 3),
+    );
+  }
+
+  /// 快速信息提示
+  static void quickInfo(String message) {
+    Get.snackbar(
+      '💡 提示',
+      message,
+      backgroundColor: Colors.blue.shade100,
+      colorText: Colors.blue.shade800,
+      duration: Duration(seconds: 2),
     );
   }
 }
