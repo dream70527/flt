@@ -6,7 +6,8 @@ import '../controllers/dialog_controller.dart';
 /// 自定义弹窗组件
 class CustomDialogWidget extends StatelessWidget {
   final String title;
-  final String content;
+  final String? content;
+  final Widget? contentWidget;
   final String topButtonText;
   final String bottomButtonText;
   final VoidCallback? onTopPressed;
@@ -16,13 +17,15 @@ class CustomDialogWidget extends StatelessWidget {
   const CustomDialogWidget({
     super.key,
     required this.title,
-    required this.content,
+    this.content,
+    this.contentWidget,
     this.topButtonText = '确认',
     this.bottomButtonText = '取消',
     this.onTopPressed,
     this.onBottomPressed,
     this.onClose,
-  });
+  }) : assert(content != null || contentWidget != null, 'content 和 contentWidget 不能同时为空'),
+       assert(content == null || contentWidget == null, 'content 和 contentWidget 不能同时提供');
 
   @override
   Widget build(BuildContext context) {
@@ -102,8 +105,8 @@ class CustomDialogWidget extends StatelessWidget {
         maxHeight: 300.h,
       ),
       child: SingleChildScrollView(
-        child: Text(
-          content,
+        child: contentWidget ?? Text(
+          content ?? '',
           style: TextStyle(
             fontSize: 16.sp,
             color: Colors.black87,
@@ -189,16 +192,20 @@ class DialogUtils {
   /// 显示基础自定义弹窗
   static void showCustom({
     String title = '提示',
-    required String message,
+    String? message,
+    Widget? contentWidget,
     String confirmText = '确定',
     String cancelText = '取消',
     VoidCallback? onConfirm,
     VoidCallback? onCancel,
   }) {
+    assert(message != null || contentWidget != null, 'message 和 contentWidget 不能同时为空');
+    assert(message == null || contentWidget == null, 'message 和 contentWidget 不能同时提供');
     final controller = _getController();
     controller.showCustomDialog(
       title: title,
       content: message,
+      contentWidget: contentWidget,
       topButton: confirmText,
       bottomButton: cancelText,
       onTopPressed: () {
@@ -215,14 +222,18 @@ class DialogUtils {
   /// Promise风格的确认弹窗
   static Future<bool> showConfirm({
     String title = '确认',
-    required String message,
+    String? message,
+    Widget? contentWidget,
     String confirmText = '确认',
     String cancelText = '取消',
   }) {
+    assert(message != null || contentWidget != null, 'message 和 contentWidget 不能同时为空');
+    assert(message == null || contentWidget == null, 'message 和 contentWidget 不能同时提供');
     final controller = _getController();
     return controller.showDialogWithPromise(
       title: title,
       content: message,
+      contentWidget: contentWidget,
       confirmText: confirmText,
       cancelText: cancelText,
     );
@@ -231,23 +242,28 @@ class DialogUtils {
   /// Promise风格的信息弹窗
   static Future<void> showInfo({
     String title = '信息',
-    required String message,
+    String? message,
+    Widget? contentWidget,
     String confirmText = '知道了',
   }) {
+    assert(message != null || contentWidget != null, 'message 和 contentWidget 不能同时为空');
+    assert(message == null || contentWidget == null, 'message 和 contentWidget 不能同时提供');
     final controller = _getController();
-    return controller.showInfoWithPromise(message);
+    return controller.showInfoWithPromise(message, contentWidget);
   }
 
   /// 显示信息弹窗
   static void showInfoDialog({
     required String title,
-    required String message,
+    String? message,
+    Widget? contentWidget,
     String confirmText = '确定',
     VoidCallback? onConfirm,
   }) {
     showCustom(
       title: title,
       message: message,
+      contentWidget: contentWidget,
       confirmText: confirmText,
       cancelText: '取消',
       onConfirm: onConfirm,
@@ -257,7 +273,8 @@ class DialogUtils {
   /// 显示确认弹窗
   static void showConfirmDialog({
     required String title,
-    required String message,
+    String? message,
+    Widget? contentWidget,
     String confirmText = '确认',
     String cancelText = '取消',
     VoidCallback? onConfirm,
@@ -266,6 +283,7 @@ class DialogUtils {
     showCustom(
       title: title,
       message: message,
+      contentWidget: contentWidget,
       confirmText: confirmText,
       cancelText: cancelText,
       onConfirm: onConfirm,
@@ -275,13 +293,15 @@ class DialogUtils {
 
   /// 显示警告弹窗
   static void showWarning({
-    required String message,
+    String? message,
+    Widget? contentWidget,
     String confirmText = '知道了',
     VoidCallback? onConfirm,
   }) {
     showCustom(
       title: '⚠️ 警告',
       message: message,
+      contentWidget: contentWidget,
       confirmText: confirmText,
       cancelText: '忽略',
       onConfirm: onConfirm,
@@ -290,13 +310,15 @@ class DialogUtils {
 
   /// 显示成功弹窗
   static void showSuccess({
-    required String message,
+    String? message,
+    Widget? contentWidget,
     String confirmText = '太好了',
     VoidCallback? onConfirm,
   }) {
     showCustom(
       title: '✅ 成功',
       message: message,
+      contentWidget: contentWidget,
       confirmText: confirmText,
       cancelText: '关闭',
       onConfirm: onConfirm,
@@ -305,13 +327,15 @@ class DialogUtils {
 
   /// 显示错误弹窗
   static void showError({
-    required String message,
+    String? message,
+    Widget? contentWidget,
     String confirmText = '重试',
     VoidCallback? onConfirm,
   }) {
     showCustom(
       title: '❌ 错误',
       message: message,
+      contentWidget: contentWidget,
       confirmText: confirmText,
       cancelText: '取消',
       onConfirm: onConfirm,

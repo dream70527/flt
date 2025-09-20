@@ -43,6 +43,11 @@ class DialogDemoPage extends GetView<DialogController> {
             
             SizedBox(height: 20.h),
             
+            // Widget内容弹窗演示
+            _buildWidgetContentSection(),
+            
+            SizedBox(height: 20.h),
+            
             // Promise风格弹窗演示
             _buildPromiseStyleSection(),
             
@@ -654,6 +659,347 @@ class DialogDemoPage extends GetView<DialogController> {
           ],
         ),
       ),
+    );
+  }
+
+  /// 构建Widget内容弹窗演示区域
+  Widget _buildWidgetContentSection() {
+    return Card(
+      child: Padding(
+        padding: EdgeInsets.all(16.w),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              '🎨 Widget内容弹窗演示',
+              style: TextStyle(
+                fontSize: 18.sp,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            SizedBox(height: 12.h),
+            
+            Container(
+              padding: EdgeInsets.all(12.w),
+              decoration: BoxDecoration(
+                color: Colors.green.shade50,
+                borderRadius: BorderRadius.circular(8.r),
+                border: Border.all(color: Colors.green.shade200),
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    '✨ Widget内容功能',
+                    style: TextStyle(
+                      fontSize: 14.sp,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.green.shade700,
+                    ),
+                  ),
+                  SizedBox(height: 6.h),
+                  Text(
+                    '• 支持传入任意Flutter Widget作为弹窗内容\n'
+                    '• 可以包含图片、表单、列表等复杂组件\n'
+                    '• 支持交互式内容和动画效果\n'
+                    '• 完全替代String类型的静态文本',
+                    style: TextStyle(fontSize: 12.sp),
+                  ),
+                ],
+              ),
+            ),
+            
+            SizedBox(height: 16.h),
+            
+            // 第一行按钮
+            Row(
+              children: [
+                Expanded(
+                  child: ElevatedButton.icon(
+                    onPressed: () => _showImageDialog(),
+                    icon: Icon(Icons.image),
+                    label: Text('图片弹窗'),
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.purple,
+                      foregroundColor: Colors.white,
+                    ),
+                  ),
+                ),
+                SizedBox(width: 12.w),
+                Expanded(
+                  child: ElevatedButton.icon(
+                    onPressed: () => _showFormDialog(),
+                    icon: Icon(Icons.edit),
+                    label: Text('表单弹窗'),
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.orange,
+                      foregroundColor: Colors.white,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+            
+            SizedBox(height: 12.h),
+            
+            // 第二行按钮
+            Row(
+              children: [
+                Expanded(
+                  child: ElevatedButton.icon(
+                    onPressed: () => _showListDialog(),
+                    icon: Icon(Icons.list),
+                    label: Text('列表弹窗'),
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.teal,
+                      foregroundColor: Colors.white,
+                    ),
+                  ),
+                ),
+                SizedBox(width: 12.w),
+                Expanded(
+                  child: ElevatedButton.icon(
+                    onPressed: () => _showRichContentDialog(),
+                    icon: Icon(Icons.dashboard),
+                    label: Text('富内容'),
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.deepOrange,
+                      foregroundColor: Colors.white,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  /// 演示图片弹窗
+  void _showImageDialog() {
+    DialogUtils.showCustom(
+      title: '图片展示',
+      contentWidget: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Container(
+            width: 200.w,
+            height: 150.h,
+            decoration: BoxDecoration(
+              color: Colors.blue.shade100,
+              borderRadius: BorderRadius.circular(12.r),
+              border: Border.all(color: Colors.blue.shade300),
+            ),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Icon(
+                  Icons.image,
+                  size: 48.w,
+                  color: Colors.blue.shade600,
+                ),
+                SizedBox(height: 8.h),
+                Text(
+                  '这里可以放置图片',
+                  style: TextStyle(
+                    color: Colors.blue.shade700,
+                    fontSize: 14.sp,
+                  ),
+                ),
+              ],
+            ),
+          ),
+          SizedBox(height: 16.h),
+          Text(
+            '图片说明文字\n可以包含详细的描述信息',
+            textAlign: TextAlign.center,
+            style: TextStyle(fontSize: 14.sp),
+          ),
+        ],
+      ),
+      confirmText: '保存图片',
+      cancelText: '关闭',
+      onConfirm: () {
+        Get.snackbar('操作', '图片已保存');
+      },
+    );
+  }
+
+  /// 演示表单弹窗
+  void _showFormDialog() {
+    final nameController = TextEditingController();
+    final emailController = TextEditingController();
+    
+    DialogUtils.showCustom(
+      title: '用户信息表单',
+      contentWidget: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          TextField(
+            controller: nameController,
+            decoration: InputDecoration(
+              labelText: '姓名',
+              border: OutlineInputBorder(),
+              prefixIcon: Icon(Icons.person),
+            ),
+          ),
+          SizedBox(height: 16.h),
+          TextField(
+            controller: emailController,
+            decoration: InputDecoration(
+              labelText: '邮箱',
+              border: OutlineInputBorder(),
+              prefixIcon: Icon(Icons.email),
+            ),
+            keyboardType: TextInputType.emailAddress,
+          ),
+          SizedBox(height: 16.h),
+          Row(
+            children: [
+              Icon(Icons.info, color: Colors.blue, size: 16.w),
+              SizedBox(width: 8.w),
+              Expanded(
+                child: Text(
+                  '请填写真实信息',
+                  style: TextStyle(
+                    fontSize: 12.sp,
+                    color: Colors.grey[600],
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ],
+      ),
+      confirmText: '提交',
+      cancelText: '取消',
+      onConfirm: () {
+        if (nameController.text.isNotEmpty && emailController.text.isNotEmpty) {
+          Get.snackbar(
+            '成功',
+            '用户信息已提交: ${nameController.text}, ${emailController.text}',
+          );
+        } else {
+          Get.snackbar('错误', '请填写完整信息');
+        }
+      },
+    );
+  }
+
+  /// 演示列表弹窗
+  void _showListDialog() {
+    final items = ['Flutter', 'Dart', 'GetX', 'Material Design', 'iOS', 'Android'];
+    
+    DialogUtils.showCustom(
+      title: '技术栈选择',
+      contentWidget: Container(
+        height: 200.h,
+        child: ListView.builder(
+          itemCount: items.length,
+          itemBuilder: (context, index) {
+            return ListTile(
+              leading: CircleAvatar(
+                backgroundColor: Colors.blue.shade100,
+                child: Text('${index + 1}'),
+              ),
+              title: Text(items[index]),
+              subtitle: Text('技术栈 ${index + 1}'),
+              trailing: Icon(Icons.arrow_forward_ios, size: 16.w),
+              onTap: () {
+                Get.back();
+                Get.snackbar('选择', '你选择了: ${items[index]}');
+              },
+            );
+          },
+        ),
+      ),
+      confirmText: '确定',
+      cancelText: '取消',
+    );
+  }
+
+  /// 演示富内容弹窗
+  void _showRichContentDialog() {
+    DialogUtils.showCustom(
+      title: '综合展示',
+      contentWidget: Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          // 顶部卡片
+          Card(
+            color: Colors.blue.shade50,
+            child: Padding(
+              padding: EdgeInsets.all(12.w),
+              child: Row(
+                children: [
+                  Icon(Icons.star, color: Colors.orange),
+                  SizedBox(width: 8.w),
+                  Expanded(
+                    child: Text(
+                      '这是一个富文本弹窗示例',
+                      style: TextStyle(fontWeight: FontWeight.bold),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+          
+          SizedBox(height: 12.h),
+          
+          // 进度指示器
+          Text('加载进度:', style: TextStyle(fontSize: 14.sp)),
+          SizedBox(height: 8.h),
+          LinearProgressIndicator(
+            value: 0.7,
+            backgroundColor: Colors.grey[300],
+            valueColor: AlwaysStoppedAnimation<Color>(Colors.green),
+          ),
+          SizedBox(height: 4.h),
+          Text('70%', style: TextStyle(fontSize: 12.sp, color: Colors.grey[600])),
+          
+          SizedBox(height: 16.h),
+          
+          // 标签组
+          Wrap(
+            spacing: 8.w,
+            children: ['重要', '紧急', '新功能'].map((tag) => Chip(
+              label: Text(tag, style: TextStyle(fontSize: 12.sp)),
+              backgroundColor: Colors.grey[200],
+            )).toList(),
+          ),
+          
+          SizedBox(height: 16.h),
+          
+          // 底部信息
+          Container(
+            padding: EdgeInsets.all(8.w),
+            decoration: BoxDecoration(
+              color: Colors.yellow.shade100,
+              borderRadius: BorderRadius.circular(8.r),
+            ),
+            child: Row(
+              children: [
+                Icon(Icons.lightbulb, color: Colors.orange),
+                SizedBox(width: 8.w),
+                Expanded(
+                  child: Text(
+                    '通过Widget内容，可以实现任意复杂的弹窗布局！',
+                    style: TextStyle(fontSize: 12.sp),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+      confirmText: '很棒！',
+      cancelText: '关闭',
+      onConfirm: () {
+        Get.snackbar('反馈', '感谢你的支持！');
+      },
     );
   }
 }

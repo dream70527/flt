@@ -9,6 +9,7 @@ class DialogController extends GetxController {
   // 弹窗内容
   RxString dialogTitle = '提示'.obs;
   RxString dialogContent = '这是弹窗内容，可以放置任何信息。'.obs;
+  Rx<Widget?> dialogContentWidget = Rx<Widget?>(null);
   RxString topButtonText = '确认'.obs;
   RxString bottomButtonText = '取消'.obs;
   
@@ -28,13 +29,24 @@ class DialogController extends GetxController {
   void showCustomDialog({
     String? title,
     String? content,
+    Widget? contentWidget,
     String? topButton,
     String? bottomButton,
     VoidCallback? onTopPressed,
     VoidCallback? onBottomPressed,
   }) {
+    assert(content != null || contentWidget != null, 'content 和 contentWidget 不能同时为空');
+    assert(content == null || contentWidget == null, 'content 和 contentWidget 不能同时提供');
+    
     if (title != null) dialogTitle.value = title;
-    if (content != null) dialogContent.value = content;
+    if (content != null) {
+      dialogContent.value = content;
+      dialogContentWidget.value = null;
+    }
+    if (contentWidget != null) {
+      dialogContentWidget.value = contentWidget;
+      dialogContent.value = '';
+    }
     if (topButton != null) topButtonText.value = topButton;
     if (bottomButton != null) bottomButtonText.value = bottomButton;
     
@@ -53,13 +65,23 @@ class DialogController extends GetxController {
   Future<bool> showDialogWithPromise({
     String? title,
     String? content,
+    Widget? contentWidget,
     String? confirmText,
     String? cancelText,
   }) {
+    assert(content != null || contentWidget != null, 'content 和 contentWidget 不能同时为空');
+    assert(content == null || contentWidget == null, 'content 和 contentWidget 不能同时提供');
     final Completer<bool> completer = Completer<bool>();
     
     if (title != null) dialogTitle.value = title;
-    if (content != null) dialogContent.value = content;
+    if (content != null) {
+      dialogContent.value = content;
+      dialogContentWidget.value = null;
+    }
+    if (contentWidget != null) {
+      dialogContentWidget.value = contentWidget;
+      dialogContent.value = '';
+    }
     if (confirmText != null) topButtonText.value = confirmText;
     if (cancelText != null) bottomButtonText.value = cancelText;
     
@@ -98,12 +120,15 @@ class DialogController extends GetxController {
   }
 
   /// Promise风格的信息弹窗
-  Future<void> showInfoWithPromise(String message) {
+  Future<void> showInfoWithPromise(String? message, [Widget? contentWidget]) {
+    assert(message != null || contentWidget != null, 'message 和 contentWidget 不能同时为空');
+    assert(message == null || contentWidget == null, 'message 和 contentWidget 不能同时提供');
     final Completer<void> completer = Completer<void>();
     
     showCustomDialog(
       title: '提示',
       content: message,
+      contentWidget: contentWidget,
       topButton: '知道了',
       bottomButton: '关闭',
       onTopPressed: () {
@@ -204,15 +229,21 @@ class DialogController extends GetxController {
     return Container(
       width: double.infinity,
       padding: EdgeInsets.all(20),
-      child: Obx(() => Text(
-        dialogContent.value,
-        style: TextStyle(
-          fontSize: 16,
-          color: Colors.black87,
-          height: 1.5,
-        ),
-        textAlign: TextAlign.center,
-      )),
+      child: Obx(() {
+        final widget = dialogContentWidget.value;
+        if (widget != null) {
+          return SingleChildScrollView(child: widget);
+        }
+        return Text(
+          dialogContent.value,
+          style: TextStyle(
+            fontSize: 16,
+            color: Colors.black87,
+            height: 1.5,
+          ),
+          textAlign: TextAlign.center,
+        );
+      }),
     );
   }
 

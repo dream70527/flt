@@ -8,16 +8,20 @@ class DialogUtils {
   /// 显示基础弹窗
   static void show({
     String title = '提示',
-    required String message,
+    String? message,
+    Widget? content,
     String confirmText = '确定',
     String cancelText = '取消',
     VoidCallback? onConfirm,
     VoidCallback? onCancel,
   }) {
+    assert(message != null || content != null, 'message 和 content 不能同时为空');
+    assert(message == null || content == null, 'message 和 content 不能同时提供');
     Get.dialog(
       _buildDialog(
         title: title,
         message: message,
+        content: content,
         confirmText: confirmText,
         cancelText: cancelText,
         onConfirm: () {
@@ -36,16 +40,20 @@ class DialogUtils {
   /// Promise风格弹窗 - 返回Future<bool>
   static Future<bool> confirm({
     String title = '确认',
-    required String message,
+    String? message,
+    Widget? content,
     String confirmText = '确认',
     String cancelText = '取消',
   }) {
+    assert(message != null || content != null, 'message 和 content 不能同时为空');
+    assert(message == null || content == null, 'message 和 content 不能同时提供');
     final Completer<bool> completer = Completer<bool>();
 
     Get.dialog(
       _buildDialog(
         title: title,
         message: message,
+        content: content,
         confirmText: confirmText,
         cancelText: cancelText,
         onConfirm: () {
@@ -71,7 +79,8 @@ class DialogUtils {
   /// 构建弹窗Widget
   static Widget _buildDialog({
     required String title,
-    required String message,
+    String? message,
+    Widget? content,
     required String confirmText,
     required String cancelText,
     required VoidCallback onConfirm,
@@ -101,7 +110,7 @@ class DialogUtils {
               _buildHeader(title),
               
               // 中间内容区域
-              _buildContent(message),
+              _buildContent(message, content),
               
               // 底部按钮区域 - 上下两个按钮
               _buildActions(
@@ -163,7 +172,7 @@ class DialogUtils {
   }
 
   /// 构建弹窗内容区域
-  static Widget _buildContent(String message) {
+  static Widget _buildContent(String? message, Widget? content) {
     return Container(
       width: double.infinity,
       padding: EdgeInsets.all(20.w),
@@ -172,8 +181,8 @@ class DialogUtils {
         maxHeight: 300.h,
       ),
       child: SingleChildScrollView(
-        child: Text(
-          message,
+        child: content ?? Text(
+          message ?? '',
           style: TextStyle(
             fontSize: 16.sp,
             color: Colors.black87,
@@ -254,13 +263,15 @@ class DialogUtils {
   /// 信息弹窗
   static void info({
     String title = '信息',
-    required String message,
+    String? message,
+    Widget? content,
     String confirmText = '知道了',
     VoidCallback? onConfirm,
   }) {
     show(
       title: title,
       message: message,
+      content: content,
       confirmText: confirmText,
       cancelText: '关闭',
       onConfirm: onConfirm,
@@ -270,13 +281,15 @@ class DialogUtils {
   /// 成功弹窗
   static void success({
     String title = '✅ 成功',
-    required String message,
+    String? message,
+    Widget? content,
     String confirmText = '太好了',
     VoidCallback? onConfirm,
   }) {
     show(
       title: title,
       message: message,
+      content: content,
       confirmText: confirmText,
       cancelText: '关闭',
       onConfirm: onConfirm,
@@ -286,13 +299,15 @@ class DialogUtils {
   /// 警告弹窗
   static void warning({
     String title = '⚠️ 警告',
-    required String message,
+    String? message,
+    Widget? content,
     String confirmText = '知道了',
     VoidCallback? onConfirm,
   }) {
     show(
       title: title,
       message: message,
+      content: content,
       confirmText: confirmText,
       cancelText: '忽略',
       onConfirm: onConfirm,
@@ -302,13 +317,15 @@ class DialogUtils {
   /// 错误弹窗
   static void error({
     String title = '❌ 错误',
-    required String message,
+    String? message,
+    Widget? content,
     String confirmText = '重试',
     VoidCallback? onConfirm,
   }) {
     show(
       title: title,
       message: message,
+      content: content,
       confirmText: confirmText,
       cancelText: '取消',
       onConfirm: onConfirm,
@@ -399,12 +416,15 @@ class NativeDialog {
   /// 显示原生风格弹窗
   static void show({
     String title = '提示',
-    required String message,
+    String? message,
+    Widget? content,
     String confirmText = '确定',
     String cancelText = '取消',
     VoidCallback? onConfirm,
     VoidCallback? onCancel,
   }) {
+    assert(message != null || content != null, 'message 和 content 不能同时为空');
+    assert(message == null || content == null, 'message 和 content 不能同时提供');
     showDialog(
       context: Get.context!,
       barrierDismissible: true,
@@ -418,8 +438,8 @@ class NativeDialog {
             ),
           ),
           content: SingleChildScrollView(
-            child: Text(
-              message,
+            child: content ?? Text(
+              message ?? '',
               style: TextStyle(
                 fontSize: 16.sp,
                 height: 1.5,
@@ -457,10 +477,13 @@ class NativeDialog {
   /// Promise风格原生弹窗
   static Future<bool> confirm({
     String title = '确认',
-    required String message,
+    String? message,
+    Widget? content,
     String confirmText = '确认',
     String cancelText = '取消',
   }) {
+    assert(message != null || content != null, 'message 和 content 不能同时为空');
+    assert(message == null || content == null, 'message 和 content 不能同时提供');
     final Completer<bool> completer = Completer<bool>();
 
     showDialog(
@@ -476,8 +499,8 @@ class NativeDialog {
             ),
           ),
           content: SingleChildScrollView(
-            child: Text(
-              message,
+            child: content ?? Text(
+              message ?? '',
               style: TextStyle(
                 fontSize: 16.sp,
                 height: 1.5,
@@ -593,10 +616,13 @@ class NativeDialog {
 
   /// 简单信息弹窗
   static void info({
-    required String message,
+    String? message,
+    Widget? content,
     String confirmText = '知道了',
     VoidCallback? onConfirm,
   }) {
+    assert(message != null || content != null, 'message 和 content 不能同时为空');
+    assert(message == null || content == null, 'message 和 content 不能同时提供');
     showDialog(
       context: Get.context!,
       barrierDismissible: true,
@@ -609,7 +635,7 @@ class NativeDialog {
               Text('信息'),
             ],
           ),
-          content: Text(message),
+          content: content ?? Text(message ?? ''),
           actions: [
             ElevatedButton(
               onPressed: () {
@@ -626,10 +652,13 @@ class NativeDialog {
 
   /// 成功弹窗
   static void success({
-    required String message,
+    String? message,
+    Widget? content,
     String confirmText = '太好了',
     VoidCallback? onConfirm,
   }) {
+    assert(message != null || content != null, 'message 和 content 不能同时为空');
+    assert(message == null || content == null, 'message 和 content 不能同时提供');
     showDialog(
       context: Get.context!,
       barrierDismissible: true,
@@ -642,7 +671,7 @@ class NativeDialog {
               Text('成功'),
             ],
           ),
-          content: Text(message),
+          content: content ?? Text(message ?? ''),
           actions: [
             ElevatedButton(
               onPressed: () {
@@ -663,10 +692,13 @@ class NativeDialog {
 
   /// 警告弹窗
   static void warning({
-    required String message,
+    String? message,
+    Widget? content,
     String confirmText = '知道了',
     VoidCallback? onConfirm,
   }) {
+    assert(message != null || content != null, 'message 和 content 不能同时为空');
+    assert(message == null || content == null, 'message 和 content 不能同时提供');
     showDialog(
       context: Get.context!,
       barrierDismissible: true,
@@ -679,7 +711,7 @@ class NativeDialog {
               Text('警告'),
             ],
           ),
-          content: Text(message),
+          content: content ?? Text(message ?? ''),
           actions: [
             ElevatedButton(
               onPressed: () {
@@ -700,10 +732,13 @@ class NativeDialog {
 
   /// 错误弹窗
   static void error({
-    required String message,
+    String? message,
+    Widget? content,
     String confirmText = '重试',
     VoidCallback? onConfirm,
   }) {
+    assert(message != null || content != null, 'message 和 content 不能同时为空');
+    assert(message == null || content == null, 'message 和 content 不能同时提供');
     showDialog(
       context: Get.context!,
       barrierDismissible: true,
@@ -716,7 +751,7 @@ class NativeDialog {
               Text('错误'),
             ],
           ),
-          content: Text(message),
+          content: content ?? Text(message ?? ''),
           actions: [
             TextButton(
               onPressed: () => Navigator.of(context).pop(),

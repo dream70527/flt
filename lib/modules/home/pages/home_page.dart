@@ -5,6 +5,7 @@ import '../controllers/home_controller.dart';
 import '../../../routes/routes.dart';
 import '../../../l10n/app_localizations.dart';
 import '../../../utils/dialog.dart';
+import '../../../widgets/lottie_demo_widget.dart';
 
 class HomePage extends GetView<HomeController> {
   const HomePage({super.key});
@@ -94,6 +95,11 @@ class HomePage extends GetView<HomeController> {
                 
                 // 弹窗测试按钮
                 _buildDialogTestButtons(context),
+                
+                SizedBox(height: 20.h),
+                
+                // Lottie动画演示
+                LottieDemoWidget(),
                 
                 SizedBox(height: 20.h),
                 
