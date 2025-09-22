@@ -13,6 +13,7 @@ class Routes {
   static const String treeSimulation = '/tree-simulation';
   static const String dialogDemo = '/dialog-demo';
   static const String dropdownDemo = '/dropdown-demo';
+  static const String gridSelection = '/grid-selection';
   
   // Tab pages
   static const String tabHome = '/tab/home';
