@@ -1,5 +1,6 @@
 import 'package:claudecodeflt/pages/dropdown_demo_page.dart';
 import 'package:claudecodeflt/pages/grid_selection_page.dart';
+import 'package:claudecodeflt/pages/horizontal_image_list_page.dart';
 import 'package:get/get.dart';
 import '../pages/login_page.dart';
 import '../pages/game_page.dart';
@@ -86,6 +87,10 @@ class AppPages {
     GetPage(
       name: Routes.gridSelection,
       page: () => const GridSelectionPage(),
+    ),
+    GetPage(
+      name: Routes.horizontalImageList,
+      page: () => const HorizontalImageListPage(),
     ),
     // 演示权限控制的页面
     GetPage(

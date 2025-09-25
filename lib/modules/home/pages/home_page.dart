@@ -98,6 +98,11 @@ class HomePage extends GetView<HomeController> {
                 
                 SizedBox(height: 20.h),
                 
+                // 横向图片列表演示入口
+                _buildHorizontalImageListEntry(context),
+                
+                SizedBox(height: 20.h),
+                
                 // 弹窗测试按钮
                 _buildDialogTestButtons(context),
                 
@@ -529,6 +534,84 @@ class HomePage extends GetView<HomeController> {
                       SizedBox(height: 4.h),
                       Text(
                         '2列3行布局，支持多选，亮色背景',
+                        style: TextStyle(
+                          fontSize: 14.sp,
+                          color: Colors.white.withValues(alpha: 0.8),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                Icon(
+                  Icons.arrow_forward_ios,
+                  color: Colors.white,
+                  size: 20.w,
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  /// 构建横向图片列表演示入口
+  Widget _buildHorizontalImageListEntry(BuildContext context) {
+    return Container(
+      width: double.infinity,
+      margin: EdgeInsets.symmetric(horizontal: 0.w),
+      child: Card(
+        elevation: 4,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(12.r),
+        ),
+        child: InkWell(
+          onTap: () => Get.toNamed(Routes.horizontalImageList),
+          borderRadius: BorderRadius.circular(12.r),
+          child: Container(
+            padding: EdgeInsets.all(20.w),
+            decoration: BoxDecoration(
+              gradient: LinearGradient(
+                colors: [
+                  Colors.indigo.shade400,
+                  Colors.indigo.shade600,
+                ],
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+              ),
+              borderRadius: BorderRadius.circular(12.r),
+            ),
+            child: Row(
+              children: [
+                Container(
+                  width: 60.w,
+                  height: 60.w,
+                  decoration: BoxDecoration(
+                    color: Colors.white.withValues(alpha: 0.2),
+                    borderRadius: BorderRadius.circular(12.r),
+                  ),
+                  child: Icon(
+                    Icons.view_carousel,
+                    color: Colors.white,
+                    size: 32.w,
+                  ),
+                ),
+                SizedBox(width: 16.w),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        '横向图片列表',
+                        style: TextStyle(
+                          fontSize: 18.sp,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.white,
+                        ),
+                      ),
+                      SizedBox(height: 4.h),
+                      Text(
+                        '双图片状态切换，选中时显示不同图片',
                         style: TextStyle(
                           fontSize: 14.sp,
                           color: Colors.white.withValues(alpha: 0.8),
